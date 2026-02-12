@@ -1,6 +1,6 @@
 {
     "name": "Joomla & MCP Server Suite",
-    "dockerComposeFile": "../docker-compose.yml",
+    "dockerComposeFile": "docker-compose.yml",
     "service": "mcp-server",
     "workspaceFolder": "/workspaces/joomla-mcp-suite",
     "forwardPorts": [8080, 8025],
