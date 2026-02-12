@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug MCP Server",
+            "program": "${workspaceFolder}/index.js", // Assicurati che il nome file sia corretto
+            "envFile": "${workspaceFolder}/.env",
+            "skipFiles": ["<node_internals>/**"]
+        },
+        {
+            "name": "Listen for Xdebug (Joomla)",
+            "type": "php",
+            "request": "launch",
+            "port": 9003,
+            "pathMappings": {
+                "/var/www/html": "${workspaceFolder}/joomla_app" 
+            }
+        }
+    ]
+}
