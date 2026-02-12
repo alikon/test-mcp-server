@@ -1,0 +1,28 @@
+{
+    "name": "Joomla & MCP Server Suite",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "mcp-server",
+    "workspaceFolder": "/workspaces/joomla-mcp-suite",
+    "forwardPorts": [8080, 8025],
+    "portsAttributes": {
+        "8080": {
+            "label": "Joomla Site",
+            "onAutoForward": "openPreview"
+        },
+        "8025": {
+            "label": "Mailpit (Email Test)",
+            "onAutoForward": "silent"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.vscode-typescript-next",
+                "xdebug.php-debug",
+                "bmewburn.vscode-intelephense-client"
+            ]
+        }
+    },
+    "postCreateCommand": "bash .devcontainer/post-create.sh",
+    "remoteUser": "root"
+}
