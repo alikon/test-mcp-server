@@ -1,0 +1,63 @@
+services:
+  joomla:
+    image: joomla:latest
+    container_name: joomla-cms
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      JOOMLA_DB_HOST: mysql
+      JOOMLA_DB_USER: joomla_user
+      JOOMLA_DB_PASSWORD: joomla_password
+      JOOMLA_DB_NAME: joomla_db
+    volumes:
+      - joomla_data:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:8.0
+    container_name: joomla-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: joomla_db
+      MYSQL_USER: joomla_user
+      MYSQL_PASSWORD: joomla_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mcp-server:
+    build:
+      context: .
+      dockerfile: .devcontainer/mcp.Dockerfile
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=joomla_user
+      - DB_PASSWORD=joomla_password
+      - DB_NAME=joomla_db
+      - DB_PREFIX=jos_               # <--- Aggiunto
+      - JOOMLA_API_BASE=http://joomla/api/index.php/v1 # <--- Aggiunto
+      - JOOMLA_API_TOKEN=${JOOMLA_API_TOKEN}
+      - JOOMLA_ROOT=/var/www/html
+    volumes:
+      - .:/workspaces/joomla-mcp-suite
+      - joomla_data:/var/www/html    # <--- Fondamentale per file_leggi/scrivi
+    depends_on:
+      - joomla
+    command: sleep infinity
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"
+
+volumes:
+  joomla_data:
+  mysql_data:
